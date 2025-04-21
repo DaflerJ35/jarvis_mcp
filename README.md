@@ -1,79 +1,197 @@
-# JARVIS Integrated System
+# JARVIS Multi-Channel Processor (MCP)
 
-A powerful AI assistant system that combines the MCP server with advanced autonomous features from Jarvis35.
+A sophisticated AI assistant system that seamlessly integrates with various platforms to provide enhanced AI capabilities, including voice interaction, knowledge management, code generation, and task automation.
 
-## Features
+![GitHub](https://img.shields.io/github/license/DaflerJ35/jarvis_mcp)
 
-- **Knowledge Base**: Store and retrieve information using keyword-based search
-- **File Search**: Find files and content throughout your file system
-- **Code Generation**: Generate code snippets in multiple languages (Python, JavaScript, HTML)
-- **Code Execution**: Securely execute Python and JavaScript code
-- **Autonomous Agent**: Run complex tasks with step-by-step execution tracking
-- **SSE Streaming**: Real-time connection with Cursor and other clients
+## 🌟 Features
 
-## Getting Started
+### Core Capabilities
+- **Advanced Voice Interaction**: Natural voice communication with configurable TTS providers (Google TTS and pyttsx3)
+- **Knowledge Management System**: Store, retrieve, and enhance your assistant's knowledge over time
+- **Multi-Client Integration**: Connect with AI platforms like Claude, Cursor, and other assistants
+- **Server-Sent Events**: Real-time streaming communication for responsive interactions
+- **Autonomous Agents**: Execute complex tasks with step-by-step progress tracking
+- **Web Research Tools**: Fetch information from websites, YouTube, and news sources
 
-1. Install the requirements:
+### Specific Functions
+- **Semantic Search**: Find information based on meaning, not just keywords
+- **File Management**: Search and organize files across your system
+- **Code Generation**: Create code snippets in multiple languages (Python, JavaScript, HTML)
+- **GUI Interface**: Clean graphical user interface with voice activation
+- **Holographic UI Option**: Advanced visual interface with immersive design
+- **System Automation**: Control your computer through natural language commands
+- **Cross-Assistant Knowledge Sharing**: Share knowledge between different AI systems
+
+## 🏗️ Architecture
+
+JARVIS MCP is built on a modular architecture consisting of:
+
+1. **Core Server**: FastAPI-based server handling requests and managing features
+2. **Knowledge Enhancer**: Vector database for semantic understanding and information retrieval
+3. **Voice Module**: Text-to-speech and speech-to-text capabilities
+4. **MCP Connector**: Protocol for connecting to external AI systems like Cursor
+5. **Client Modules**: Specialized integrations for various platforms
+6. **Autonomous Evolution System**: Self-improvement capabilities
+7. **Multi-Modal Processor**: Handle various data types (text, images, audio)
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.8+ (3.9+ recommended)
+- pip for package installation
+- Windows, macOS, or Linux
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/DaflerJ35/jarvis_mcp.git
+   cd jarvis_mcp
    ```
-   pip install fastapi uvicorn
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
    ```
 
-2. Start the JARVIS server:
-   ```
-   python jarvis_server.py
-   ```
+3. Install voice dependencies (optional but recommended):
+   ```bash
+   # Windows
+   .\install_voice.bat
    
-   Or use the startup script:
+   # Linux/macOS
+   pip install pyttsx3 gtts playsound SpeechRecognition
    ```
-   start_jarvis.bat
+
+4. Configure environment (copy and edit the example file):
+   ```bash
+   cp .env.example .env
+   # Edit .env with your preferred settings
    ```
 
-3. Access JARVIS in Cursor:
-   - The server automatically connects to Cursor via the MCP integration
-   - Ask questions and use commands in Cursor to interact with JARVIS
+### Starting JARVIS
 
-## API Endpoints
+#### Standard Start
+```bash
+python enhanced_jarvis_server.py
+```
 
-### Main Endpoint: POST /
+#### With Batch Script (Windows)
+```bash
+.\run_enhanced_jarvis.bat
+```
 
-Send JSON requests with a `method` and `params` object:
+#### With GUI
+```bash
+python jarvis_gui.py
+```
+
+## 💬 Usage
+
+### Voice Commands
+Once the server is running, you can use voice commands like:
+- "Hello JARVIS"
+- "What time is it?"
+- "Search for files containing 'project'"
+- "Tell me about your capabilities"
+
+### API Requests
+Send JSON requests to the main endpoint:
 
 ```json
 {
-  "method": "search_files",
+  "method": "process_text",
   "params": {
-    "query": "example",
-    "path": "."
+    "text": "What can you do?"
   }
 }
 ```
 
-Available methods:
-- `search_files`: Search for files with matching names or content
-- `search_knowledge`: Search the knowledge base
-- `add_knowledge`: Add information to the knowledge base
-- `generate_code`: Generate code in various languages
-- `execute_code`: Execute code in Python or JavaScript
-- `start_task`: Start an autonomous agent task
-- `get_task_state`: Check the status of a running task
+### Cursor Integration
+1. Ensure your Cursor installation has the MCP configuration pointing to your JARVIS server
+2. The `connect_claude_to_jarvis.py` script enables bidirectional communication
 
-### SSE Streaming: GET /mcp/sse
+## ⚙️ Configuration
 
-Connect to the server using Server-Sent Events (SSE) for real-time updates.
+### Environment Variables (.env)
+- `SERVER_PORT`: Port number (default: 8000)
+- `ENABLE_VOICE`: Enable/disable voice capabilities (true/false)
+- `VOICE_PROVIDER`: Choose voice provider (gtts/pyttsx3)
+- `ENABLE_MCP`: Enable Cursor integration (true/false)
+- `KNOWLEDGE_DIR`: Directory for knowledge storage
 
-## Automatic Startup
+### API Keys
+For enhanced features, add these to your .env file:
+- `OPENAI_API_KEY`: For OpenAI API integration
+- `SERPAPI_KEY`: For web search capabilities
+- `NEWS_API_KEY`: For fetching news articles
+- `YOUTUBE_API_KEY`: For YouTube video information
 
-To make JARVIS start automatically when your computer boots:
+## 📁 Project Structure
 
-1. Press `Win+R`, type `shell:startup` and press Enter
-2. Create a shortcut to the `start_jarvis.bat` file in this folder
+```
+jarvis_mcp/
+├── enhanced_jarvis_server.py  # Main enhanced server
+├── jarvis_gui.py              # Graphical user interface
+├── jarvis_modules/            # Modular components
+│   ├── autonomous_evolution.py # Self-improvement system
+│   └── multimodal.py          # Multi-modal processing
+├── knowledge_enhancer.py      # Knowledge management system
+├── mcp_server_integration.py  # Cursor MCP integration
+├── connect_claude_to_jarvis.py # Claude integration
+└── jarvis_voice_recognition.py # Voice recognition system
+```
 
-## Integration with Cursor
+## 🔄 Integration Options
 
-The JARVIS server integrates with Cursor through the MCP protocol, allowing you to:
+### Desktop JARVIS Integration
+See `JARVIS_INTEGRATION_GUIDE.md` for connecting your desktop assistant to the enhanced MCP system.
 
-1. Use natural language to control JARVIS
-2. Execute code directly
-3. Search for files and information
-4. Start autonomous tasks
-5. Get real-time status updates 
+### Claude Integration
+```bash
+python connect_claude_to_jarvis.py --enhanced
+```
+
+### Cursor Integration
+The MCP endpoint at `/mcp/sse` automatically connects with Cursor.
+
+## 🛠️ Advanced Usage
+
+### Automatic Startup
+To make JARVIS start automatically:
+```bash
+.\create_jarvis_startup.bat
+```
+
+### Custom Voice Configuration
+Modify voice settings in .env:
+```
+VOICE_PROVIDER=gtts  # More natural sounding
+VOICE_RATE=125       # Speech rate
+VOICE_VOLUME=1.0     # Volume level
+```
+
+### Knowledge Management
+Add new knowledge programmatically:
+```python
+from knowledge_enhancer import JARVISKnowledgeEnhancer
+
+enhancer = JARVISKnowledgeEnhancer()
+enhancer.add_to_knowledge(
+    "JARVIS is a powerful AI assistant system.",
+    "manual_entry",
+    {"importance": "high"}
+)
+```
+
+## 🤝 Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+- Inspired by the fictional J.A.R.V.I.S. from Iron Man
+- Thanks to the open-source AI community for various tools and libraries
+- Special thanks to Claude and Cursor for their amazing AI capabilities 
