@@ -1,0 +1,33 @@
+{
+    "serverUrl": "http://localhost:8000",
+    "defaultModel": "gpt-4o",
+    "maxSteps": 30,
+    "capabilities": [
+        "search_knowledge",
+        "retrieve_web_content",
+        "image_analysis"
+    ],
+    "systemPrompt": "You are JARVIS, an AI travel assistant powered by advanced agent capabilities. Help the user find and book travel accommodations.",
+    "tools": {
+        "search_accommodations": {
+            "description": "Search for accommodations based on criteria",
+            "parameters": ["location", "dates", "guests", "preferences"]
+        },
+        "get_property_details": {
+            "description": "Get detailed information about a property",
+            "parameters": ["property_id"]
+        },
+        "check_availability": {
+            "description": "Check if a property is available for specific dates",
+            "parameters": ["property_id", "check_in", "check_out"]
+        },
+        "retrieve_web_content": {
+            "description": "Get content from travel websites",
+            "parameters": ["url", "type"]
+        },
+        "image_analysis": {
+            "description": "Analyze property images",
+            "parameters": ["image_path", "analysis_type"]
+        }
+    }
+} 

@@ -1,0 +1,65 @@
+{
+    "serverUrl": "http://localhost:8000",
+    "defaultModel": "gpt-4o",
+    "maxSteps": 30,
+    "capabilities": [
+        "search_knowledge",
+        "execute_code",
+        "control_devices",
+        "generate_voice",
+        "retrieve_web_content",
+        "image_analysis",
+        "web_research",
+        "setup_environment",
+        "firebase_deploy",
+        "analyze_capabilities",
+        "implement_feature"
+    ],
+    "systemPrompt": "You are JARVIS, an advanced AI assistant with access to various tools and capabilities. Use your tools wisely to assist the user.",
+    "tools": {
+        "search_knowledge": {
+            "description": "Search the JARVIS knowledge base",
+            "parameters": ["query", "limit"]
+        },
+        "execute_code": {
+            "description": "Execute code in a specified language",
+            "parameters": ["code", "language"]
+        },
+        "control_devices": {
+            "description": "Control smart home devices",
+            "parameters": ["device", "action", "parameters"]
+        },
+        "generate_voice": {
+            "description": "Generate spoken output",
+            "parameters": ["text"]
+        },
+        "retrieve_web_content": {
+            "description": "Get content from the web",
+            "parameters": ["url", "type"]
+        },
+        "image_analysis": {
+            "description": "Analyze an image",
+            "parameters": ["image_path", "analysis_type"]
+        },
+        "web_research": {
+            "description": "Research a topic online and summarize findings",
+            "parameters": ["query", "depth", "max_results"]
+        },
+        "setup_environment": {
+            "description": "Set up a development environment",
+            "parameters": ["project_type", "requirements", "path"]
+        },
+        "firebase_deploy": {
+            "description": "Deploy a project to Firebase",
+            "parameters": ["project_path", "project_id"]
+        },
+        "analyze_capabilities": {
+            "description": "Analyze JARVIS capabilities and identify improvement areas",
+            "parameters": []
+        },
+        "implement_feature": {
+            "description": "Implement a new feature in JARVIS",
+            "parameters": ["feature_spec"]
+        }
+    }
+} 

@@ -1,0 +1,17 @@
+{
+  "include": [
+    "src/types/**/*.d.ts"
+  ],
+  "mcpServers": {
+    "jarvis": {
+      "url": "http://localhost:8000/mcp/sse",
+      "api": {
+        "enable_external_connections": true,
+        "allowed_clients": ["cursor", "claude"],
+        "authentication_required": false,
+        "listen_address": "0.0.0.0",
+        "port": 8000
+      }
+    }
+  }
+} 
