@@ -1,0 +1,15 @@
+{
+  "name": "Periodic Table of Elements",
+  "description": "A tabular arrangement of chemical elements ordered by atomic number",
+  "categories": [
+    "Metals",
+    "Nonmetals",
+    "Metalloids"
+  ],
+  "elements_count": 118,
+  "type": "reference",
+  "_metadata": {
+    "timestamp": "2025-04-23T22:23:07.947827",
+    "category": "science"
+  }
+}

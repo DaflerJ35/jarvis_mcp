@@ -1,0 +1,21 @@
+{
+  "name": "Artificial Intelligence",
+  "definition": "The simulation of human intelligence in machines",
+  "subfields": [
+    "Machine Learning",
+    "Natural Language Processing",
+    "Computer Vision",
+    "Robotics"
+  ],
+  "applications": [
+    "Virtual Assistants",
+    "Autonomous Vehicles",
+    "Medical Diagnosis",
+    "Smart Homes"
+  ],
+  "type": "concept",
+  "_metadata": {
+    "timestamp": "2025-04-23T22:23:07.944973",
+    "category": "technology"
+  }
+}

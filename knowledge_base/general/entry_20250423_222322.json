@@ -1,0 +1,58 @@
+{
+  "name": "JARVIS",
+  "full_name": "Just A Rather Very Intelligent System",
+  "type": "system",
+  "description": "JARVIS is an advanced AI assistant designed to help with a wide range of tasks through natural language interaction and voice commands. Inspired by the fictional AI in the Marvel universe, JARVIS aims to provide helpful, knowledgeable, and context-aware responses.",
+  "capabilities": [
+    "Voice recognition and synthesis",
+    "Natural language understanding",
+    "Knowledge base search and retrieval",
+    "Task automation",
+    "System monitoring and control",
+    "Personalized assistance"
+  ],
+  "components": [
+    {
+      "name": "Voice Recognition",
+      "description": "Speech-to-text component for understanding spoken commands",
+      "technologies": [
+        "SpeechRecognition",
+        "PyAudio",
+        "PocketSphinx"
+      ]
+    },
+    {
+      "name": "Voice Engine",
+      "description": "Text-to-speech component for verbal responses",
+      "technologies": [
+        "pyttsx3",
+        "gTTS",
+        "ElevenLabs"
+      ]
+    },
+    {
+      "name": "Knowledge Base",
+      "description": "Structured and unstructured data storage for information retrieval",
+      "categories": [
+        "general",
+        "science",
+        "technology",
+        "personal"
+      ]
+    }
+  ],
+  "usage": {
+    "wake_word": "JARVIS",
+    "common_commands": [
+      "What time is it?",
+      "What's the weather today?",
+      "Find information about [topic]",
+      "Remember [information] for later",
+      "Set a timer for [duration]"
+    ]
+  },
+  "_metadata": {
+    "timestamp": "2025-04-23T22:23:22.761418",
+    "category": "general"
+  }
+}
