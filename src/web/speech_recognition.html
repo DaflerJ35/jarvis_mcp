@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JARVIS Speech Recognition</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background-color: #2d2d2d;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #0078d7;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #3a3a3a;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            background-color: #0078d7;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0063b1;
+        }
+        button:disabled {
+            background-color: #4a4a4a;
+            cursor: not-allowed;
+        }
+        .output {
+            padding: 15px;
+            background-color: #3a3a3a;
+            border-radius: 8px;
+            min-height: 200px;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            overflow-y: auto;
+        }
+        .final {
+            color: #e0e0e0;
+        }
+        .interim {
+            color: #999;
+        }
+        .settings {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #3a3a3a;
+            border-radius: 8px;
+        }
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        select, input {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #555;
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+        .wake-word {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .highlight {
+            color: #0078d7;
+            font-weight: bold;
+        }
+        .status-indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .status-inactive {
+            background-color: #888;
+        }
+        .status-listening {
+            background-color: #0078d7;
+            animation: pulse 1.5s infinite;
+        }
+        .status-processing {
+            background-color: #ffb900;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .log {
+            font-size: 14px;
+            color: #999;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JARVIS Speech Recognition</h1>
+        
+        <div class="status">
+            <span class="status-indicator status-inactive" id="statusIndicator"></span>
+            <span id="statusText">Ready</span>
+        </div>
+        
+        <div class="controls">
+            <button id="startButton">Start Recognition</button>
+            <button id="stopButton" disabled>Stop Recognition</button>
+        </div>
+        
+        <div class="wake-word">
+            <label for="wakeWord">Wake Word:</label>
+            <input type="text" id="wakeWord" value="jarvis" />
+            <button id="testWakeWord">Test</button>
+        </div>
+        
+        <h3>Speech Output</h3>
+        <div class="output" id="output">
+            <span class="final" id="finalOutput"></span>
+            <span class="interim" id="interimOutput"></span>
+        </div>
+        
+        <div class="settings">
+            <div class="setting-row">
+                <label for="language">Language:</label>
+                <select id="language">
+                    <option value="en-US">English (US)</option>
+                    <option value="en-GB">English (UK)</option>
+                    <option value="fr-FR">French</option>
+                    <option value="de-DE">German</option>
+                    <option value="es-ES">Spanish</option>
+                </select>
+            </div>
+            <div class="setting-row">
+                <label for="continuous">Continuous Recognition:</label>
+                <input type="checkbox" id="continuous" checked />
+            </div>
+            <div class="setting-row">
+                <label for="useWakeWord">Use Wake Word:</label>
+                <input type="checkbox" id="useWakeWord" checked />
+            </div>
+        </div>
+        
+        <h3>Log</h3>
+        <div class="log" id="log"></div>
+    </div>
+    
+    <script>
+        // Elements
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const testWakeWordButton = document.getElementById('testWakeWord');
+        const finalOutput = document.getElementById('finalOutput');
+        const interimOutput = document.getElementById('interimOutput');
+        const wakeWordInput = document.getElementById('wakeWord');
+        const languageSelect = document.getElementById('language');
+        const continuousCheckbox = document.getElementById('continuous');
+        const useWakeWordCheckbox = document.getElementById('useWakeWord');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const statusText = document.getElementById('statusText');
+        const logElement = document.getElementById('log');
+        
+        // Speech recognition setup
+        let recognition = null;
+        let isRecognizing = false;
+        let finalTranscript = '';
+        let interimTranscript = '';
+        
+        // Check browser support
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            log('Error: Speech recognition not supported in this browser');
+            startButton.disabled = true;
+            stopButton.disabled = true;
+        } else {
+            // Initialize speech recognition
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.maxAlternatives = 1;
+            
+            // Set initial language
+            recognition.lang = languageSelect.value;
+            
+            // Event handlers
+            recognition.onstart = function() {
+                isRecognizing = true;
+                updateStatus('listening');
+                log('Recognition started');
+            };
+            
+            recognition.onend = function() {
+                isRecognizing = false;
+                updateStatus('inactive');
+                log('Recognition stopped');
+                
+                // Restart if continuous mode is enabled
+                if (continuousCheckbox.checked && startButton.disabled) {
+                    recognition.start();
+                    log('Restarting recognition (continuous mode)');
+                }
+            };
+            
+            recognition.onresult = function(event) {
+                interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                        processSpeech(event.results[i][0].transcript.trim());
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                
+                finalOutput.innerHTML = finalTranscript;
+                interimOutput.innerHTML = interimTranscript;
+                
+                // Auto-scroll
+                output.scrollTop = output.scrollHeight;
+            };
+            
+            recognition.onerror = function(event) {
+                log('Error: ' + event.error);
+                if (event.error === 'no-speech') {
+                    updateStatus('inactive');
+                }
+            };
+        }
+        
+        // Process speech input
+        function processSpeech(text) {
+            updateStatus('processing');
+            log('Processing: ' + text);
+            
+            const wakeWord = wakeWordInput.value.toLowerCase();
+            const useWakeWord = useWakeWordCheckbox.checked;
+            
+            if (useWakeWord) {
+                // Check if wake word is present
+                if (text.toLowerCase().includes(wakeWord)) {
+                    // Extract command (text after wake word)
+                    const command = text.toLowerCase().split(wakeWord)[1]?.trim();
+                    
+                    if (command) {
+                        log('Wake word detected! Command: ' + command);
+                        sendCommandToServer(command);
+                    } else {
+                        log('Wake word detected but no command found');
+                    }
+                } else {
+                    log('No wake word detected in: ' + text);
+                }
+            } else {
+                // Process all speech without wake word
+                log('Processing without wake word: ' + text);
+                sendCommandToServer(text);
+            }
+            
+            updateStatus('listening');
+        }
+        
+        // Send command to server
+        function sendCommandToServer(command) {
+            // Highlight the command in the output
+            const commandStart = finalTranscript.toLowerCase().lastIndexOf(command.toLowerCase());
+            if (commandStart >= 0) {
+                const beforeCommand = finalTranscript.substring(0, commandStart);
+                const afterCommand = finalTranscript.substring(commandStart + command.length);
+                finalOutput.innerHTML = beforeCommand + '<span class="highlight">' + 
+                                        finalTranscript.substring(commandStart, commandStart + command.length) + 
+                                        '</span>' + afterCommand;
+            }
+            
+            // Here you would send the command to your JARVIS backend
+            // For now, just log it
+            log('COMMAND SENT: ' + command);
+            
+            // Example implementation with fetch:
+            /*
+            fetch('/api/command', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ command: command })
+            })
+            .then(response => response.json())
+            .then(data => {
+                log('Server response: ' + JSON.stringify(data));
+            })
+            .catch(error => {
+                log('Error sending command: ' + error);
+            });
+            */
+        }
+        
+        // Update status indicator
+        function updateStatus(status) {
+            statusIndicator.className = 'status-indicator';
+            
+            switch(status) {
+                case 'inactive':
+                    statusIndicator.classList.add('status-inactive');
+                    statusText.textContent = 'Ready';
+                    break;
+                case 'listening':
+                    statusIndicator.classList.add('status-listening');
+                    statusText.textContent = 'Listening...';
+                    break;
+                case 'processing':
+                    statusIndicator.classList.add('status-processing');
+                    statusText.textContent = 'Processing...';
+                    break;
+            }
+        }
+        
+        // Log function
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.innerHTML += `[${timestamp}] ${message}<br>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        // Button event handlers
+        startButton.addEventListener('click', function() {
+            finalTranscript = '';
+            interimTranscript = '';
+            finalOutput.innerHTML = '';
+            interimOutput.innerHTML = '';
+            
+            try {
+                recognition.start();
+                startButton.disabled = true;
+                stopButton.disabled = false;
+            } catch(e) {
+                log('Error starting recognition: ' + e.message);
+            }
+        });
+        
+        stopButton.addEventListener('click', function() {
+            recognition.stop();
+            startButton.disabled = false;
+            stopButton.disabled = true;
+        });
+        
+        testWakeWordButton.addEventListener('click', function() {
+            const wakeWord = wakeWordInput.value.trim();
+            if (wakeWord) {
+                log('Testing wake word: "' + wakeWord + '"');
+                // You can add a test function here
+            } else {
+                log('Please enter a wake word to test');
+            }
+        });
+        
+        // Settings event handlers
+        languageSelect.addEventListener('change', function() {
+            if (recognition) {
+                const wasRunning = isRecognizing;
+                
+                if (wasRunning) {
+                    recognition.stop();
+                }
+                
+                recognition.lang = languageSelect.value;
+                log('Language changed to: ' + languageSelect.options[languageSelect.selectedIndex].text);
+                
+                if (wasRunning) {
+                    setTimeout(() => {
+                        recognition.start();
+                    }, 100);
+                }
+            }
+        });
+        
+        // Log initial status
+        log('JARVIS Speech Recognition initialized');
+        log('Using: ' + (window.SpeechRecognition ? 'SpeechRecognition API' : 'webkitSpeechRecognition API'));
+    </script>
+</body>
+</html> 
